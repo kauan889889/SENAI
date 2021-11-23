@@ -1,0 +1,20 @@
+<?php
+
+    include("classe/conexao.php");
+    $marca = isset( $_POST ['marca']) ? $_POST['marca']:null;
+    $modelo = isset( $_POST ['modelo']) ? $_POST['modelo']:null;
+    $ano = isset( $_POST ['ano']) ? $_POST['ano']:null;
+    $msg = false;
+  if(isset($_FILES['arquivo'])){
+    $extensao = strtolower(substr($_FILES['arquivo']['name'], -4)); //pega a extensao do arquivo
+    $novo_nome = md5(time()) . $extensao; //define o nome do arquivo
+    $diretorio = "upload/"; //define o diretorio para onde enviaremos o arquivo
+    move_uploaded_file($_FILES['arquivo']['tmp_name'], $diretorio.$novo_nome); //efetua o upload
+
+    $sql_code = "INSERT INTO veiculos (id, marca, modelo, ano, arquivo, data) VALUES(null, '$marca', '$modelo', '$ano', '$novo_nome', NOW())";
+    if($mysqli->query($sql_code))
+      $msg = "Arquivo enviado com sucesso!";
+    else
+      $msg = "Falha ao enviar arquivo.";
+  }
+     ?>
